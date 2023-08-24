@@ -14,16 +14,13 @@ const theme = {
     tablet: 376,
   },
 };
-const dimensions = {
-  width: 375,
-  height: 667,
-};
+const breakpoint = 'phone';
 
 describe('createRestyleFunction', () => {
   describe('creates a function that', () => {
     it('accepts props and returns a style object', () => {
       const styleFunc = createRestyleFunction({property: 'opacity'});
-      expect(styleFunc.func({opacity: 0.5}, {theme, dimensions})).toStrictEqual(
+      expect(styleFunc.func({opacity: 0.5}, {theme, breakpoint})).toStrictEqual(
         {
           opacity: 0.5,
         },
@@ -35,7 +32,7 @@ describe('createRestyleFunction', () => {
         property: 'opacity',
         styleProperty: 'testOpacity' as keyof RNStyle,
       });
-      expect(styleFunc.func({opacity: 0.5}, {theme, dimensions})).toStrictEqual(
+      expect(styleFunc.func({opacity: 0.5}, {theme, breakpoint})).toStrictEqual(
         {
           testOpacity: 0.5,
         },
@@ -49,7 +46,7 @@ describe('createRestyleFunction', () => {
         transform: ({value}: {value: number}) => 1 - value,
       });
       expect(
-        styleFunc.func({transparency: 0.1}, {theme, dimensions}),
+        styleFunc.func({transparency: 0.1}, {theme, breakpoint}),
       ).toStrictEqual({
         opacity: 0.9,
       });
@@ -66,7 +63,7 @@ describe('createRestyleFunction', () => {
               tablet: 0.8,
             },
           },
-          {theme, dimensions},
+          {theme, breakpoint},
         ),
       ).toStrictEqual({
         opacity: 0.5,
@@ -80,7 +77,7 @@ describe('createRestyleFunction', () => {
               tablet: 0.8,
             },
           },
-          {theme, dimensions: {width: 768, height: 1024}},
+          {theme, breakpoint: 'tablet'},
         ),
       ).toStrictEqual({
         opacity: 0.8,
@@ -95,7 +92,7 @@ describe('createRestyleFunction', () => {
 
       it('creates a function that picks values from the theme', () => {
         expect(
-          styleFunc.func({opacity: 'barelyVisible'}, {theme, dimensions}),
+          styleFunc.func({opacity: 'barelyVisible'}, {theme, breakpoint}),
         ).toStrictEqual({
           opacity: 0.1,
         });
@@ -109,7 +106,7 @@ describe('createRestyleFunction', () => {
                 tablet: 'barelyVisible',
               },
             },
-            {theme, dimensions: {width: 768, height: 1024}},
+            {theme, breakpoint: 'tablet'},
           ),
         ).toStrictEqual({
           opacity: 0.1,
@@ -118,13 +115,13 @@ describe('createRestyleFunction', () => {
 
       it('throws an error when trying to use an invalid theme value', () => {
         expect(() =>
-          styleFunc.func({opacity: 'veryVisible'}, {theme, dimensions}),
+          styleFunc.func({opacity: 'veryVisible'}, {theme, breakpoint}),
         ).toThrow(/does not exist/);
       });
 
       it('allows 0 as a theme value', () => {
         expect(() =>
-          styleFunc.func({opacity: 'invisible'}, {theme, dimensions}),
+          styleFunc.func({opacity: 'invisible'}, {theme, breakpoint}),
         ).not.toThrow(/does not exist/);
       });
     });

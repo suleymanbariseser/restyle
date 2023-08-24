@@ -1,7 +1,6 @@
 import {getThemeValue} from './utilities';
 import {
   BaseTheme,
-  Dimensions,
   ResponsiveBaseTheme,
   RestyleFunction,
   RNStyleProperty,
@@ -10,12 +9,14 @@ import {
 import {getResponsiveValue} from './utilities/getResponsiveValue';
 
 const getMemoizedMapHashKey = (
-  dimensions: Dimensions | null,
+  breakpoint: string | number | symbol | undefined,
   themeKey: string,
   property: string,
   value: string | number | boolean,
 ) => {
-  return `${dimensions?.height}x${dimensions?.width}-${themeKey}-${property}-${value}`;
+  const postfix = `${themeKey}-${property}-${value}`;
+
+  return breakpoint ? `${breakpoint.toString()}-${postfix}` : postfix;
 };
 
 const memoizedThemes: WeakMap<BaseTheme, any> = new WeakMap();
@@ -41,7 +42,7 @@ const createRestyleFunction = <
 
   const func: RestyleFunction<TProps, Theme, S | P> = (
     props,
-    {theme, dimensions},
+    {theme, breakpoint},
   ) => {
     if (memoizedThemes.get(theme) == null) {
       memoizedThemes.set(theme, {});
@@ -82,7 +83,7 @@ const createRestyleFunction = <
         }
 
         return getMemoizedMapHashKey(
-          dimensions,
+          breakpoint,
           String(themeKey),
           String(property),
           propertyValue,
@@ -100,10 +101,10 @@ const createRestyleFunction = <
     }
 
     const value = (() => {
-      if (isResponsiveTheme(theme) && dimensions) {
+      if (isResponsiveTheme(theme) && breakpoint) {
         return getResponsiveValue(props[property], {
           theme,
-          dimensions,
+          breakpoint,
           themeKey,
           transform,
         });

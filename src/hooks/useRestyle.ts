@@ -1,9 +1,10 @@
 import {useMemo} from 'react';
-import {StyleProp, useWindowDimensions} from 'react-native';
+import {StyleProp} from 'react-native';
 
-import {BaseTheme, RNStyle, Dimensions} from '../types';
+import {BaseTheme, RNStyle} from '../types';
 
 import useTheme from './useTheme';
+import {useBreakpoint} from './useBreakpoint';
 
 const filterRestyleProps = <
   TRestyleProps,
@@ -41,10 +42,10 @@ const useRestyle = <
       props: TInputProps,
       {
         theme,
-        dimensions,
+        breakpoint,
       }: {
         theme: Theme;
-        dimensions: Dimensions | null;
+        breakpoint: string | undefined;
       },
     ) => RNStyle;
     properties: (keyof TProps)[];
@@ -54,13 +55,7 @@ const useRestyle = <
 ) => {
   const theme = useTheme<Theme>();
 
-  // Theme should not change between renders, so we can disable rules-of-hooks
-  // We want to avoid calling useWindowDimensions if breakpoints are not defined
-  // as this hook is called extremely often and incurs some performance hit.
-  const dimensions = theme.breakpoints
-    ? // eslint-disable-next-line react-hooks/rules-of-hooks
-      useWindowDimensions()
-    : null;
+  const breakpoint = useBreakpoint<Theme>();
 
   const {cleanProps, restyleProps, serializedRestyleProps} = filterRestyleProps(
     props,
@@ -70,7 +65,7 @@ const useRestyle = <
   const calculatedStyle: StyleProp<RNStyle> = useMemo(() => {
     const style = composedRestyleFunction.buildStyle(restyleProps as TProps, {
       theme,
-      dimensions,
+      breakpoint,
     });
 
     const styleProp: StyleProp<RNStyle> = props.style;
@@ -86,7 +81,7 @@ const useRestyle = <
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     theme,
-    dimensions,
+    breakpoint,
     props.style,
     serializedRestyleProps,
     composedRestyleFunction,

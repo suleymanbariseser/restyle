@@ -1,7 +1,6 @@
 import {
   AtLeastOneResponsiveValue,
   Breakpoint,
-  Dimensions,
   ResponsiveBaseTheme,
 } from '../types';
 
@@ -11,35 +10,26 @@ import {
 export const getValueForScreenSize = <Theme extends ResponsiveBaseTheme, TVal>({
   responsiveValue,
   breakpoints,
-  dimensions,
+  breakpoint,
 }: {
   responsiveValue: AtLeastOneResponsiveValue<TVal, Theme['breakpoints']>;
   breakpoints: Theme['breakpoints'];
-  dimensions: Dimensions;
+  breakpoint: string | undefined;
 }): TVal | undefined => {
-  const sortedBreakpoints = Object.entries(breakpoints).sort((valA, valB) => {
-    const valAWidth = getWidth(valA[1]);
-    const valBWidth = getWidth(valB[1]);
+  const sortedBreakpoints = Object.entries(breakpoints)
+    .sort((valA, valB) => {
+      const valAWidth = getWidth(valA[1]);
+      const valBWidth = getWidth(valB[1]);
 
-    return valAWidth - valBWidth;
-  });
+      return valAWidth - valBWidth;
+    })
+    .map(([key]) => key);
 
-  const {width, height} = dimensions;
-  return sortedBreakpoints.reduce<TVal | undefined>((acc, [key, value]) => {
-    if (typeof value === 'object') {
-      if (
-        width >= value.width &&
-        height >= value.height &&
-        responsiveValue[key] !== undefined
-      ) {
-        return responsiveValue[key] as TVal;
-      }
-    } else if (width >= value && responsiveValue[key] !== undefined) {
-      return responsiveValue[key] as TVal;
-    }
+  const index = sortedBreakpoints.indexOf(breakpoint as string);
 
-    return acc;
-  }, undefined);
+  return Object.entries(responsiveValue)
+    .filter(([_, value]) => value !== undefined)
+    .find(([key]) => sortedBreakpoints.indexOf(key) >= index)?.[1];
 };
 
 function getWidth(value: Breakpoint) {

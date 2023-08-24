@@ -11,10 +11,7 @@ const theme = {
   breakpoints: {},
 };
 
-const dimensions = {
-  width: 375,
-  height: 667,
-};
+const breakpoint = 'md';
 
 describe('composeRestyleFunctions', () => {
   const restyleFunctions = [
@@ -25,7 +22,7 @@ describe('composeRestyleFunctions', () => {
   it('composes multiple restyleFunctions into one', () => {
     const {buildStyle} = composeRestyleFunctions(restyleFunctions);
     expect(
-      buildStyle({color: 'black', margin: 'm'}, {theme, dimensions}),
+      buildStyle({color: 'black', margin: 'm'}, {theme, breakpoint}),
     ).toStrictEqual({
       color: '#111111',
       margin: 16,

@@ -24,12 +24,12 @@ export const getResponsiveValue = <
   {
     theme,
     transform,
-    dimensions,
+    breakpoint,
     themeKey,
   }: {
     theme: Theme;
     transform?: StyleTransformFunction<Theme, K, TVal>;
-    dimensions: Dimensions;
+    breakpoint: string | undefined;
     themeKey?: K;
   },
 ):
@@ -41,7 +41,7 @@ export const getResponsiveValue = <
     ? getValueForScreenSize({
         responsiveValue: propValue,
         breakpoints: theme.breakpoints,
-        dimensions,
+        breakpoint,
       })
     : propValue;
 

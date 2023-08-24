@@ -3,7 +3,6 @@ import {StyleSheet, ViewStyle} from 'react-native';
 import {
   RestyleFunctionContainer,
   BaseTheme,
-  Dimensions,
   RNStyle,
   RestyleFunction,
 } from './types';
@@ -43,14 +42,14 @@ const composeRestyleFunctions = <
     props: TProps,
     {
       theme,
-      dimensions,
+      breakpoint,
     }: {
       theme: Theme;
-      dimensions: Dimensions | null;
+      breakpoint: string | undefined;
     },
   ): RNStyle => {
     const styles: ViewStyle = {};
-    const options = {theme, dimensions};
+    const options = {theme, breakpoint};
     // We make the assumption that the props object won't have extra prototype keys.
     // eslint-disable-next-line guard-for-in
     for (const key in props) {

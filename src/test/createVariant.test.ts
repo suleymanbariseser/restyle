@@ -59,15 +59,12 @@ const theme: BaseTheme = {
     },
   },
 };
-const dimensions = {
-  width: 375,
-  height: 667,
-};
+const breakpoint = 'phone';
 
 describe('createVariant', () => {
   it('expands a variant to the given values in the theme', () => {
     const variant = createVariant({themeKey: 'textVariants'});
-    expect(variant.func({variant: 'body'}, {theme, dimensions})).toStrictEqual({
+    expect(variant.func({variant: 'body'}, {theme, breakpoint})).toStrictEqual({
       fontSize: 14,
       lineHeight: 18,
     });
@@ -81,7 +78,7 @@ describe('createVariant', () => {
         opacity: 0.5,
       },
     });
-    expect(variant.func({}, {theme, dimensions})).toStrictEqual({
+    expect(variant.func({}, {theme, breakpoint})).toStrictEqual({
       fontSize: 10,
       opacity: 0.5,
     });
@@ -91,7 +88,7 @@ describe('createVariant', () => {
     const variant = createVariant({
       themeKey: 'boxVariants',
     });
-    expect(variant.func({}, {theme, dimensions})).toStrictEqual({
+    expect(variant.func({}, {theme, breakpoint})).toStrictEqual({
       fontSize: 12,
       backgroundColor: '#111111',
     });
@@ -106,7 +103,7 @@ describe('createVariant', () => {
       },
     });
 
-    expect(variant.func({}, {theme, dimensions})).toStrictEqual({
+    expect(variant.func({}, {theme, breakpoint})).toStrictEqual({
       backgroundColor: '#111111',
       fontSize: 12,
       opacity: 0.5,
@@ -122,7 +119,7 @@ describe('createVariant', () => {
       },
     });
 
-    expect(variant.func({}, {theme, dimensions})).toStrictEqual({
+    expect(variant.func({}, {theme, breakpoint})).toStrictEqual({
       backgroundColor: '#111111',
       fontSize: 12,
       opacity: 0.5,
@@ -133,10 +130,7 @@ describe('createVariant', () => {
         {},
         {
           theme,
-          dimensions: {
-            width: 376,
-            height: 667,
-          },
+          breakpoint: 'tablet',
         },
       ),
     ).toStrictEqual({
@@ -154,7 +148,7 @@ describe('createVariant', () => {
         opacity: 0.5,
       },
     });
-    expect(variant.func({variant: 'body'}, {theme, dimensions})).toStrictEqual({
+    expect(variant.func({variant: 'body'}, {theme, breakpoint})).toStrictEqual({
       fontSize: 14,
       lineHeight: 18,
       opacity: 0.5,
@@ -165,20 +159,20 @@ describe('createVariant', () => {
     const themeSubset = {...theme};
     delete themeSubset.textVariants;
     const variant = createVariant({themeKey: 'textVariants'});
-    expect(variant.func({}, {theme: themeSubset, dimensions})).toStrictEqual(
+    expect(variant.func({}, {theme: themeSubset, breakpoint})).toStrictEqual(
       {},
     );
   });
 
   it('correctly creates an unknown variant without key in theme', () => {
     const variant = createVariant({themeKey: '__variant__'});
-    expect(variant.func({}, {theme, dimensions})).toStrictEqual({});
+    expect(variant.func({}, {theme, breakpoint})).toStrictEqual({});
   });
 
   it('supports referencing other theme values in the variant', () => {
     const variant = createVariant({themeKey: 'textVariants'});
     expect(
-      variant.func({variant: 'subheader'}, {theme, dimensions}),
+      variant.func({variant: 'subheader'}, {theme, breakpoint}),
     ).toStrictEqual({
       fontSize: 16,
       color: '#111111',
